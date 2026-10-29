@@ -37,7 +37,12 @@ export default function HomeScreen() {
     gamesPlayed: 0,
   });
 
+  async function clearMobile() {
+    await AsyncStorage.clear();
+  }
+
   useEffect(() => {
+    clearMobile();
     (async () => {
       try {
         const storedPlayer = await AsyncStorage.getItem("mainPlayer");

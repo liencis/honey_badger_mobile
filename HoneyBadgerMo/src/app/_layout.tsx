@@ -15,7 +15,6 @@ export default function StackLayout() {
           name="index"
           options={{ title: "Honey Badger", headerLeft: () => null }}
         />
-        <Stack.Screen name="Intro" options={{ title: "Welcome" }} />
       </Stack>
     </ThemeProvider>
   );

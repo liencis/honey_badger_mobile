@@ -28,16 +28,15 @@ export default function PlayerImage({
 
 const styles = StyleSheet.create({
   imageContainer: {
-    width: 200,
-    height: 200,
+    width: 150,
+    height: 150,
     borderRadius: 100,
     overflow: "hidden",
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#f0f0f0",
-    marginBottom: 20,
-    borderWidth: 2,
-    borderColor: "#ccc",
+    borderWidth: 3,
+    borderColor: "#faa31b",
   },
   imageContainerSmall: {
     width: 60,
@@ -47,9 +46,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#f0f0f0",
-    marginBottom: 20,
-    borderWidth: 2,
-    borderColor: "#ccc",
+    marginBottom: 10,
+    borderWidth: 3,
+    borderColor: "#faa31b",
   },
   image: {
     width: "100%",

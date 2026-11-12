@@ -91,11 +91,7 @@ function Intro({ setMainPlayer, mainPlayer }: IntroProps) {
               size="large"
               defaultImage={require("../../assets/images/image_default.png")}
             />
-            <FontAwesomeFreeSolid
-              name="wand-magic-sparkles"
-              size={21}
-              color="#ffffff"
-            />
+            <FontAwesomeFreeSolid name="images" size={21} color="#ffffff" />
           </View>
         </Pressable>
 

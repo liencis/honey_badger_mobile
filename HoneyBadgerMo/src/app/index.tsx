@@ -1,12 +1,17 @@
 import * as Device from "expo-device";
-import { Platform, StyleSheet } from "react-native";
+import { Platform, ScrollView, StyleSheet } from "react-native";
 
+import Cell from "@/components/Cell";
 import PlayerImage from "@/components/PlayerImage";
 import { ThemedText } from "@/components/themed-text";
 import { BottomTabInset, MaxContentWidth, Spacing } from "@/constants/theme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { FontAwesomeFreeSolid } from "@react-native-vector-icons/fontawesome-free-solid";
+import { Stack, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
+import type { CellInfo } from "../setup/grid";
+import { gameSetup, Level } from "../setup/grid";
 import Intro from "./Intro";
 
 function getDevMenuHint() {
@@ -36,13 +41,26 @@ export default function HomeScreen() {
     victories: 0,
     gamesPlayed: 0,
   });
+  const [gameLevel, setGameLevel] = useState<
+    (typeof Level)[keyof typeof Level]
+  >(Level.easy);
+  const [gameDimensions, setGameDimensions] = useState({ row: 15, col: 15 });
+  const [game, beePlacement] = gameSetup(
+    gameDimensions.row,
+    gameDimensions.col,
+    gameLevel,
+  );
+  const [cells, setCells] = useState<Map<number, CellInfo>>(game);
+  const [gameOver, setGameOver] = useState(false);
+  const [gameWon, setGameWon] = useState(false);
+  const router = useRouter();
 
   async function clearMobile() {
     await AsyncStorage.clear();
   }
 
   useEffect(() => {
-    clearMobile();
+    // clearMobile(); //This is for testing only, for clearing asyncStorage
     (async () => {
       try {
         const storedPlayer = await AsyncStorage.getItem("mainPlayer");
@@ -74,14 +92,54 @@ export default function HomeScreen() {
       {!mainPlayer.name ? (
         <Intro setMainPlayer={setMainPlayer} mainPlayer={mainPlayer} />
       ) : null}
-      <Text style={styles.title}>
-        Welcome to Honey Badger {mainPlayer.name}!
-      </Text>
-      <PlayerImage
-        selectedImageUri={mainPlayer.imageUri}
-        size="small"
-        defaultImage={require("../../assets/images/image_default.png")}
+      <Stack.Screen
+        options={{
+          title: "Honey Badger",
+          headerBackButtonDisplayMode: "minimal",
+          headerStyle: {
+            backgroundColor: "#ffffff",
+          },
+          headerLeft: () => (
+            <FontAwesomeFreeSolid
+              name="align-justify"
+              size={21}
+              color="#FAA31B"
+            />
+          ), //here will be drawer configured
+          headerRight: () => (
+            <Pressable onPress={() => router.push("/profile-settings")}>
+              <PlayerImage
+                selectedImageUri={mainPlayer.imageUri}
+                size="small"
+                defaultImage={require("../../assets/images/image_default.png")}
+              />
+            </Pressable>
+          ),
+        }}
       />
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <ScrollView
+          horizontal={true}
+          contentContainerStyle={styles.scrollContainer}
+        >
+          <Text style={styles.title}>
+            Welcome to Honey Badger {mainPlayer.name}!
+          </Text>
+          <Cell
+            cellInfo={{
+              number: 1,
+              value: 3,
+              neighbors: [],
+              open: true,
+              bee: false,
+              beeMarked: false,
+            }}
+            setCell={setCells}
+            setGameOver={setGameOver}
+            setGameWon={setGameWon}
+          />
+        </ScrollView>
+      </ScrollView>
     </View>
   );
   // return (
@@ -120,7 +178,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    flexDirection: "row",
   },
   safeArea: {
     flex: 1,
@@ -149,5 +206,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.three,
     paddingVertical: Spacing.four,
     borderRadius: Spacing.four,
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: "center",
+    flexDirection: "column",
   },
 });

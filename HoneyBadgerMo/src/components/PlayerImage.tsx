@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 3,
     borderColor: "#faa31b",
+    backgroundColor: "#ffffff",
   },
   imageContainerSmall: {
     width: 39,
@@ -46,6 +47,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 2,
     borderColor: "#faa31b",
+    backgroundColor: "#ffffff",
   },
   image: {
     width: "100%",

@@ -1,4 +1,4 @@
-import { type Dispatch, type SetStateAction } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import { Image, Pressable, StyleSheet } from "react-native";
 import type { CellInfo } from "../setup/grid";
 import { checkWin, openAllCells, openCell } from "../setup/grid";
@@ -11,6 +11,16 @@ interface CellProps {
 }
 
 function Cell({ cellInfo, setCell, setGameOver, setGameWon }: CellProps) {
+  const [buttonStyle, setButtonStyle] = useState(styles.cell);
+
+  const handleMouseEnter = () => {
+    setButtonStyle(styles.cellHover);
+  };
+
+  const handleMouseLeave = () => {
+    setButtonStyle(styles.cell);
+  };
+
   const handleClick = () => {
     if (cellInfo.open === false) {
       if (cellInfo.bee) {
@@ -37,8 +47,30 @@ function Cell({ cellInfo, setCell, setGameOver, setGameWon }: CellProps) {
     }
   };
 
+  const handleLongPress = () => {
+    setCell((prevCells) => {
+      const newCells = new Map(prevCells);
+      const currentCell = newCells.get(Number(cellInfo.number));
+      if (currentCell) {
+        newCells.set(Number(cellInfo.number), {
+          ...currentCell,
+          beeMarked: !currentCell.beeMarked,
+        });
+      }
+      return newCells;
+    });
+  };
+
   return (
-    <Pressable className="cell" id={`${cellInfo.number}`} onPress={handleClick}>
+    <Pressable
+      className="cell"
+      id={`${cellInfo.number}`}
+      onPress={handleClick}
+      onLongPress={handleLongPress}
+      onHoverIn={() => handleMouseEnter()}
+      onHoverOut={() => handleMouseLeave()}
+      style={buttonStyle}
+    >
       {cellInfo.open ? (
         cellInfo.bee ? (
           <Image
@@ -137,5 +169,17 @@ const styles = StyleSheet.create({
   img: {
     width: 70,
     height: 60,
+  },
+  cell: {
+    transitionDuration: "0.3s",
+    transitionProperty: "transform",
+    transform: [{ scale: 1.0 }],
+    opacity: 1,
+  },
+  cellHover: {
+    transitionDuration: "0.3s",
+    transitionProperty: "transform",
+    transform: [{ scale: 1.1 }],
+    opacity: 1,
   },
 });

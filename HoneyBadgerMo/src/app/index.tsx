@@ -1,7 +1,7 @@
 import * as Device from "expo-device";
 import { Platform, ScrollView, StyleSheet } from "react-native";
 
-import Cell from "@/components/Cell";
+import CellsGrid from "@/components/CellsGrid";
 import PlayerImage from "@/components/PlayerImage";
 import { ThemedText } from "@/components/themed-text";
 import { BottomTabInset, MaxContentWidth, Spacing } from "@/constants/theme";
@@ -54,6 +54,8 @@ export default function HomeScreen() {
   const [gameOver, setGameOver] = useState(false);
   const [gameWon, setGameWon] = useState(false);
   const router = useRouter();
+  const [numBees, setNumBees] = useState(beePlacement.length);
+  const [showWarning, setShowWarning] = useState(false);
 
   async function clearMobile() {
     await AsyncStorage.clear();
@@ -125,18 +127,15 @@ export default function HomeScreen() {
           <Text style={styles.title}>
             Welcome to Honey Badger {mainPlayer.name}!
           </Text>
-          <Cell
-            cellInfo={{
-              number: 1,
-              value: 3,
-              neighbors: [],
-              open: true,
-              bee: false,
-              beeMarked: false,
-            }}
+          <CellsGrid
+            cells={cells}
+            row={gameDimensions.row}
+            col={gameDimensions.col}
             setCell={setCells}
             setGameOver={setGameOver}
             setGameWon={setGameWon}
+            setNumBees={setNumBees}
+            setShowWarning={setShowWarning}
           />
         </ScrollView>
       </ScrollView>

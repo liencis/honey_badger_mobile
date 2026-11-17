@@ -1,6 +1,7 @@
 import * as Device from "expo-device";
 import { Platform, ScrollView, StyleSheet } from "react-native";
 
+import BadgerHeader from "@/components/BadgerHeader";
 import CellsGrid from "@/components/CellsGrid";
 import PlayerImage from "@/components/PlayerImage";
 import { ThemedText } from "@/components/themed-text";
@@ -9,7 +10,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FontAwesomeFreeSolid } from "@react-native-vector-icons/fontawesome-free-solid";
 import { Stack, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, View } from "react-native";
 import type { CellInfo } from "../setup/grid";
 import { gameSetup, Level } from "../setup/grid";
 import Intro from "./Intro";
@@ -119,14 +120,16 @@ export default function HomeScreen() {
           ),
         }}
       />
+      <BadgerHeader
+        mainPlayerName={mainPlayer.name}
+        score={mainPlayer.score}
+        numBees={numBees}
+      />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <ScrollView
           horizontal={true}
           contentContainerStyle={styles.scrollContainer}
         >
-          <Text style={styles.title}>
-            Welcome to Honey Badger {mainPlayer.name}!
-          </Text>
           <CellsGrid
             cells={cells}
             row={gameDimensions.row}
